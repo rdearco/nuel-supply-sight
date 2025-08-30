@@ -112,20 +112,8 @@ export const ProductsTable: React.FC = () => {
             },
           }}
           onRowClick={handleRowClick}
+          rowHeight={75}
           sx={{
-            '& .MuiDataGrid-row': {
-              cursor: 'pointer',
-              minHeight: '75px !important',
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-              '& .MuiDataGrid-cell': {
-                // paddingTop: '12px',
-                // paddingBottom: '12px',
-                // display: 'flex',
-                // alignItems: 'center',
-              },
-            },
             '& .MuiDataGrid-row[data-rowindex="0"]': {
               '&[data-selected="false"]': {
                 bgcolor: (theme) => {
