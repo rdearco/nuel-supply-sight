@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { RootState } from '../store';
-import { setDrawerOpen, updateProductDemand, transferStock } from '../store/slices/productsSlice';
+import { setDrawerOpen, updateProductDemand, transferStock, setProducts, applyFilters } from '../store/slices/productsSlice';
 import { graphqlService } from '../services/graphqlService';
 
 export const ProductDrawer: React.FC = () => {
@@ -49,8 +49,14 @@ export const ProductDrawer: React.FC = () => {
       await graphqlService.updateProductDemand(selectedProduct.id, newDemand);
       dispatch(updateProductDemand({ id: selectedProduct.id, demand: newDemand }));
       setDemandValue('');
-    } catch (error) {
-      console.log(error);
+      
+      // Force re-fetch products to ensure data sync
+      const updatedProducts = await graphqlService.getProducts();
+      if (updatedProducts.data?.products) {
+        dispatch(setProducts(updatedProducts.data.products));
+        dispatch(applyFilters());
+      }
+    } catch {
       setError('Failed to update demand');
     } finally {
       setLoading(false);
@@ -79,6 +85,13 @@ export const ProductDrawer: React.FC = () => {
       await graphqlService.transferStock(selectedProduct.id, amount);
       dispatch(transferStock({ id: selectedProduct.id, amount }));
       setStockValue('');
+      
+      // Force re-fetch products to ensure data sync
+      const updatedProducts = await graphqlService.getProducts();
+      if (updatedProducts.data?.products) {
+        dispatch(setProducts(updatedProducts.data.products));
+        dispatch(applyFilters());
+      }
     } catch {
       setError('Failed to transfer stock');
     } finally {

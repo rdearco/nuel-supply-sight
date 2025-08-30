@@ -37,8 +37,8 @@ const typeDefs = `
   }
 `;
 
-// Mock database - in memory store
-const products: Product[] = mockProducts.map(product => ({ ...product }));
+// Create a fully mutable copy of mockProducts for mutations
+let products: Product[] = structuredClone(mockProducts);
 
 const resolvers = {
   Query: {
@@ -70,7 +70,9 @@ const resolvers = {
       const productIndex = products.findIndex(p => p.id === productId);
       if (productIndex !== -1 && products[productIndex]) {
         const updatedProduct = { ...products[productIndex], demand: newDemand };
-        products[productIndex] = updatedProduct;
+        products = products.map((product, index) => 
+          index === productIndex ? updatedProduct : product
+        );
         return updatedProduct;
       }
       return null;
@@ -83,7 +85,9 @@ const resolvers = {
           ...products[productIndex], 
           stock: products[productIndex].stock + amount 
         };
-        products[productIndex] = updatedProduct;
+        products = products.map((product, index) => 
+          index === productIndex ? updatedProduct : product
+        );
         return updatedProduct;
       }
       return null;

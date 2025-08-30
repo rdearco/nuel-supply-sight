@@ -1,16 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { 
   Grid,
   Card, 
   CardContent, 
   Typography, 
-  Skeleton,
-  Alert,
-  Box
+  Skeleton
 } from '@mui/material';
 import { RootState } from '../store';
-import { useKPIs } from '../hooks/useGraphQL';
 
 interface KPICardProps {
   title: string;
@@ -36,39 +33,50 @@ const KPICard: React.FC<KPICardProps> = ({ title, value, loading = false }) => (
 );
 
 export const KPICards: React.FC = () => {
-  const { dateRange } = useSelector((state: RootState) => state.products);
-  const { data: kpis, loading, error } = useKPIs(dateRange);
+  const { products, loading } = useSelector((state: RootState) => state.products);
 
-  if (error) {
-    return (
-      <Box sx={{ mb: 3 }}>
-        <Alert severity="error">
-          Error loading KPIs: {error.message}
-        </Alert>
-      </Box>
-    );
-  }
+  const kpis = useMemo(() => {
+    if (!products.length) {
+      return {
+        totalStock: 0,
+        totalDemand: 0,
+        fillRate: 0
+      };
+    }
+
+    const totalStock = products.reduce((sum, product) => sum + product.stock, 0);
+    const totalDemand = products.reduce((sum, product) => sum + product.demand, 0);
+    const fillRate = totalDemand > 0 
+      ? Math.round((products.reduce((sum, product) => sum + Math.min(product.stock, product.demand), 0) / totalDemand) * 100 * 100) / 100
+      : 0;
+
+    return {
+      totalStock,
+      totalDemand,
+      fillRate
+    };
+  }, [products]);
 
   return (
     <Grid container spacing={3} sx={{ mb: 3 }}>
       <Grid>
         <KPICard
           title="Total Stock"
-          value={kpis?.totalStock.toLocaleString() || 0}
+          value={kpis.totalStock.toLocaleString()}
           loading={loading}
         />
       </Grid>
       <Grid>
         <KPICard
           title="Total Demand"
-          value={kpis?.totalDemand.toLocaleString() || 0}
+          value={kpis.totalDemand.toLocaleString()}
           loading={loading}
         />
       </Grid>
       <Grid>
         <KPICard
           title="Fill Rate"
-          value={kpis ? `${kpis.fillRate}%` : '0%'}
+          value={`${kpis.fillRate}%`}
           loading={loading}
         />
       </Grid>
