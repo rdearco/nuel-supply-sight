@@ -2,6 +2,18 @@
 
 This file contains project-specific settings and commands for Claude Code.
 
+## Tech Stack
+
+- **Frontend**: React 19, TypeScript
+- **State Management**: Redux Toolkit
+- **UI Components**: Material-UI (MUI)
+- **Styling**: Tailwind CSS
+- **Charts**: MUI X-Charts (LineChart)
+- **Icons**: Material-UI Icons
+- **Build Tool**: Vite
+- **Testing**: Vitest + Testing Library
+- **GraphQL**: Mock server with executable schema
+
 ## Development Commands
 
 ```bash
@@ -55,6 +67,23 @@ src/
 └── main.tsx           # Application entry point
 ```
 
-## Notes
+## Architecture Notes
 
-Add any project-specific notes or commands that Claude should be aware of here.
+- **State Management**: Uses Redux Toolkit for global state management
+- **Mock Data**: GraphQL service with in-memory mock data for development
+- **Real-time Updates**: KPICards and TrendChart components subscribe to Redux store and auto-update when product data changes
+- **Testing**: Tests updated to work with Redux state instead of mocking GraphQL hooks
+
+## Key Features
+
+- **Editable Mock Data**: GraphQL mutations properly update the in-memory product data
+- **Reactive UI**: KPI cards and trend charts automatically recalculate when data changes
+- **Data Synchronization**: Product updates trigger re-fetch to keep GraphQL service and Redux store in sync
+
+## Recent Updates
+
+- Fixed mock data mutability issues by creating proper mutable copies
+- Updated KPICards and TrendChart to use Redux state for real-time updates
+- Modified ProductDrawer to refetch data after mutations for consistency
+- Updated test utilities to support preloaded Redux state
+- Fixed TypeScript compilation issues with test setup

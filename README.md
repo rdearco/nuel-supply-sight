@@ -17,9 +17,10 @@ A Daily Inventory Dashboard for supply chain management built with React, TypeSc
 
 - **Frontend**: React 19, TypeScript
 - **State Management**: Redux Toolkit
+- **UI Components**: Material-UI (MUI)
 - **Styling**: Tailwind CSS
-- **Charts**: Recharts
-- **Icons**: Heroicons
+- **Charts**: MUI X-Charts (LineChart)
+- **Icons**: Material-UI Icons
 - **Build Tool**: Vite
 - **Testing**: Vitest + Testing Library
 - **GraphQL**: Mock server with executable schema
@@ -107,7 +108,9 @@ Fill Rate = (sum(min(stock, demand)) / sum(demand)) * 100%
 - Update demand and transfer stock functionality
 
 ✅ **Data Interactions**
-- GraphQL mutations for data updates
+- GraphQL mutations for data updates with in-memory persistence
+- Real-time KPI and chart updates when data changes
+- Automatic data synchronization between GraphQL service and Redux store
 - Real-time filtering and search
 - Loading states and error handling
 - Responsive design for all screen sizes
@@ -128,7 +131,7 @@ The mock GraphQL API includes:
 
 ## Testing
 
-The project includes comprehensive tests covering component rendering, business logic, and GraphQL operations.
+The project includes comprehensive tests covering component rendering, business logic, and GraphQL operations. Tests have been updated to work with Redux state management instead of mocking GraphQL hooks.
 
 ```bash
 # Run all tests
@@ -136,6 +139,9 @@ npm run test
 
 # Run with coverage
 npm run test:coverage
+
+# Run specific test file
+npm test -- src/components/__tests__/KPICards.test.tsx
 ```
 
 ## Architecture Decisions
@@ -146,10 +152,17 @@ See [NOTES.md](./NOTES.md) for detailed information about technical decisions, t
 
 See [CLAUDE.md](./CLAUDE.md) for project-specific settings and commands for Claude Code development assistance.
 
+## Recent Updates
+
+- ✅ **Fixed Mock Data Mutability**: Resolved read-only property issues with GraphQL mutations
+- ✅ **Real-time UI Updates**: KPI cards and trend charts now automatically update when data changes
+- ✅ **Data Synchronization**: Improved consistency between GraphQL service and Redux store
+- ✅ **Test Infrastructure**: Updated test utilities to support Redux state and fixed TypeScript issues
+- ✅ **Reactive Components**: Components now subscribe to Redux store for live data updates
+
 ## Known Issues
 
 - Node.js version compatibility (requires 20.19+ or 22.12+)
-- Some TypeScript strict mode issues may need resolution
 - Development server may not start on older Node.js versions
 
 ---
